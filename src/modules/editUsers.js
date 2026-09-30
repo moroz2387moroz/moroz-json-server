@@ -12,6 +12,8 @@ export const editUsers = () => {
       const tr = event.target.closest("tr");
       const id = tr.dataset.key;
       userService.getUser(id).then((user) => {
+        if (!user) return;
+
         nameInput.value = user.name;
         emailInput.value = user.email;
         childrenInput.checked = user.children;
@@ -25,6 +27,9 @@ export const editUsers = () => {
     e.preventDefault();
 
     if (form.dataset.method) {
+      if (!form.reportValidity()) return;
+      if (!nameInput.value.trim() || !emailInput.value.trim()) return;
+
       const id = form.dataset.method;
       const user = {
         name: nameInput.value,
@@ -33,7 +38,9 @@ export const editUsers = () => {
         permission: false,
       };
 
-      userService.editUser(id, user).then(() => {
+      userService.editUser(id, user).then((updatedUser) => {
+        if (!updatedUser) return;
+
         userService.getUsers().then((users) => {
           render(users);
           form.reset();

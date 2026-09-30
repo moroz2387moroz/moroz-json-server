@@ -8,7 +8,9 @@ export const removeUsers = () => {
       const tr = event.target.closest("tr");
       const id = tr.dataset.key;
 
-      userService.removeUser(id).then((res) => {
+      userService.removeUser(id).then((removedUser) => {
+        if (!removedUser) return;
+
         userService.getUsers().then((users) => {
           render(users);
         });

@@ -10,6 +10,9 @@ export const addUsers = () => {
     e.preventDefault();
 
     if (!form.dataset.method) {
+      if (!form.reportValidity()) return;
+      if (!nameInput.value.trim() || !emailInput.value.trim()) return;
+
       const user = {
         name: nameInput.value,
         email: emailInput.value,
@@ -17,7 +20,9 @@ export const addUsers = () => {
         permission: false,
       };
 
-      userService.addUser(user).then(() => {
+      userService.addUser(user).then((createdUser) => {
+        if (!createdUser) return;
+
         userService.getUsers().then((users) => {
           render(users);
           form.reset();

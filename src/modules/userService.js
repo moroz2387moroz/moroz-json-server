@@ -1,63 +1,95 @@
+const API_URL = "http://localhost:4545";
+
+const setRequestErrorVisible = (visible) => {
+  const errorMessage = document.getElementById("request-error");
+  if (errorMessage) errorMessage.hidden = !visible;
+};
+
 export class UserService {
+  async getData(url) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+
+      const data = await response.json();
+      setRequestErrorVisible(false);
+      return data;
+    } catch {
+      setRequestErrorVisible(true);
+      return null;
+    }
+  }
+
+  async sendData(url, options) {
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+
+      const body = await response.text();
+      const data = body ? JSON.parse(body) : true;
+      setRequestErrorVisible(false);
+      return data;
+    } catch {
+      setRequestErrorVisible(true);
+      return null;
+    }
+  }
+
   getUsers() {
-    return fetch("http://localhost:4545/users").then((res) => res.json());
+    return this.getData(`${API_URL}/users`);
   }
 
   addUser(user) {
-    return fetch("http://localhost:4545/users", {
+    return this.sendData(`${API_URL}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
-    }).then((res) => res.json());
+    });
   }
 
   removeUser(id) {
-    return fetch(`http://localhost:4545/users/${id}`, {
+    return this.sendData(`${API_URL}/users/${id}`, {
       method: "DELETE",
-    }).then((res) => res.json());
+    });
   }
 
   changeUser(id, data) {
-    return fetch(`http://localhost:4545/users/${id}`, {
+    return this.sendData(`${API_URL}/users/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    }).then((res) => res.json());
+    });
   }
 
   getUser(id) {
-    return fetch(`http://localhost:4545/users/${id}`).then((res) => res.json());
+    return this.getData(`${API_URL}/users/${id}`);
   }
 
   editUser(id, user) {
-    return fetch(`http://localhost:4545/users/${id}`, {
+    return this.sendData(`${API_URL}/users/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(user),
-    }).then((res) => res.json());
+    });
   }
 
   filterUsers(filterOption) {
-    return fetch(`http://localhost:4545/users?${filterOption}=true`).then(
-      (res) => res.json(),
-    );
+    return this.getData(`${API_URL}/users?${filterOption}=true`);
   }
 
   getSortUsers(sortOption) {
-    return fetch(
-      `http://localhost:4545/users?_sort=${sortOption.name}&_order=${sortOption.value}`,
-    ).then((res) => res.json());
+    return this.getData(
+      `${API_URL}/users?_sort=${sortOption.name}&_order=${sortOption.value}`,
+    );
   }
 
   getSearchUsers(str) {
-    return fetch(`http://localhost:4545/users?name_like=${str}`).then((res) =>
-      res.json(),
-    );
+    return this.getData(`${API_URL}/users?name_like=${encodeURIComponent(str)}`);
   }
 }

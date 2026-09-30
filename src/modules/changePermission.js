@@ -8,7 +8,9 @@ export const changePermission = () => {
       const tr = event.target.closest("tr");
       const input = tr.querySelector("input[type=checkbox]");
       const id = tr.dataset.key;
-      userService.changeUser(id, { permission: input.checked }).then((res) => {
+      userService.changeUser(id, { permission: input.checked }).then((updatedUser) => {
+        if (!updatedUser) return;
+
         userService.getUsers().then((users) => {
           render(users);
         });

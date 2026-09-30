@@ -1,4 +1,6 @@
 export const render = (users) => {
+    if (!Array.isArray(users)) return;
+
   const tbody = document.getElementById("table-body");
   tbody.innerHTML = "";
 
