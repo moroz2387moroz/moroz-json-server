@@ -1,0 +1,32 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Mark",
+      "email": "mark@example.com",
+      "children": true,
+      "permission": true
+    },
+    {
+      "id": 2,
+      "name": "Jacob",
+      "email": "jacob@example.com",
+      "children": false,
+      "permission": true
+    },
+    {
+      "name": "Marina",
+      "email": "marina@example.com",
+      "children": false,
+      "permission": false,
+      "id": 3
+    },
+    {
+      "name": "Magda",
+      "email": "magda@example.com",
+      "children": false,
+      "permission": false,
+      "id": 4
+    }
+  ]
+}
